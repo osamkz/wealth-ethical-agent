@@ -1,0 +1,2 @@
+duckduckgo-search==6.1.0
+openai==1.30.1
