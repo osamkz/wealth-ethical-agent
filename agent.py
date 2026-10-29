@@ -3,14 +3,15 @@ import time
 import smtplib
 from email.message import EmailMessage
 from duckduckgo_search import DDGS
-from openai import OpenAI
+import google.generativeai as genai
 from datetime import datetime
 
-# 1. Setup OpenAI
-api_key = os.environ.get("OPENAI_API_KEY")
+# 1. Setup Google Gemini
+api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
-    raise ValueError("OPENAI_API_KEY environment variable not set!")
-client = OpenAI(api_key=api_key)
+    raise ValueError("GEMINI_API_KEY environment variable not set!")
+genai.configure(api_key=api_key)
+model = genai.GenerativeModel('gemini-1.5-flash') # Highly capable and 100% free tier
 
 def search_news():
     queries = [
@@ -47,12 +48,8 @@ def generate_article(trends_data):
     NEWS DATA:
     {trends_data}
     """
-    response = client.chat.completions.create(
-        model="gpt-4o-mini", 
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7
-    )
-    return response.choices[0].message.content
+    response = model.generate_content(prompt)
+    return response.text
 
 def send_email(subject, body):
     sender_email = os.environ.get("EMAIL_SENDER")
