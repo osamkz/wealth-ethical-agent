@@ -11,7 +11,7 @@ api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     raise ValueError("GEMINI_API_KEY environment variable not set!")
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-2.0-flash') # Highly capable and 100% free tier
+model = genai.GenerativeModel('gemini-3.8-flash') # Highly capable and 100% free tier
 
 def search_news():
     queries = [
