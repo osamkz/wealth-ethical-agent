@@ -48,7 +48,7 @@ def generate_article(trends_data):
     {trends_data}
     """
     response = client.chat.completions.create(
-        model="llama3-70b-8192", # Powerful, free, and excellent at professional writing
+        model="llama-3.3-70b-versatile", # Powerful, free, and excellent at professional writing
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7
     )
