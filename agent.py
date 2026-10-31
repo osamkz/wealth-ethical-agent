@@ -3,15 +3,14 @@ import time
 import smtplib
 from email.message import EmailMessage
 from duckduckgo_search import DDGS
-import google.generativeai as genai
+from groq import Groq
 from datetime import datetime
 
-# 1. Setup Google Gemini
-api_key = os.environ.get("GEMINI_API_KEY")
+# 1. Setup Groq
+api_key = os.environ.get("GROQ_API_KEY")
 if not api_key:
-    raise ValueError("GEMINI_API_KEY environment variable not set!")
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-3.8-flash') # Highly capable and 100% free tier
+    raise ValueError("GROQ_API_KEY environment variable not set!")
+client = Groq(api_key=api_key)
 
 def search_news():
     queries = [
@@ -48,8 +47,12 @@ def generate_article(trends_data):
     NEWS DATA:
     {trends_data}
     """
-    response = model.generate_content(prompt)
-    return response.text
+    response = client.chat.completions.create(
+        model="llama3-70b-8192", # Powerful, free, and excellent at professional writing
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7
+    )
+    return response.choices[0].message.content
 
 def send_email(subject, body):
     sender_email = os.environ.get("EMAIL_SENDER")
