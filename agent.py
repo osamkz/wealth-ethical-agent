@@ -16,13 +16,15 @@ def search_news():
     queries = [
         "Shariah compliant wealth management ethical trends",
         "Islamic finance ESG investment news",
-        "green sukuk ethical investing wealth management"
+        "green sukuk ethical investing wealth management",
+        "Islamic finance infrastructure real assets trends",
+        "halal investing market outlook 2026"
     ]
     all_news = []
     with DDGS() as ddgs:
         for query in queries:
             try:
-                results = list(ddgs.news(query, max_results=3))
+                results = list(ddgs.news(query, max_results=4))
                 for r in results:
                     all_news.append(f"- {r['title']} ({r['date']}): {r['body']}")
                 time.sleep(2) 
@@ -32,23 +34,79 @@ def search_news():
 
 def generate_article(trends_data):
     today = datetime.now().strftime('%B %d, %Y')
+    year = datetime.now().strftime('%Y')
+    
     prompt = f"""
-    You are an expert content strategist for a Wealth Management startup specializing in Shariah-compliant and ethical investing. 
-    Today's date is {today}.
-    Based on the following recent news data, write a 600-800 word weekly article titled "Weekly Ethical Wealth Trends".
-    
-    STRICT GUIDELINES:
-    1. Shariah Compliance: Align with Islamic finance. Do not promote riba (interest), gharar (excessive uncertainty), or haram industries.
-    2. ESG Alignment: Highlight the synergy between Islamic finance and ESG (e.g., real-economy asset backing, social stewardship).
-    3. Structure: Catchy Title, Executive Summary, Top 3 Ethical Trends, Actionable Takeaway, and a Disclaimer.
-    4. Tone: Professional, insightful, and accessible.
-    5. LinkedIn Formatting: Use clean paragraphs, bullet points, and relevant emojis sparingly to make it highly readable on LinkedIn.
-    
-    NEWS DATA:
-    {trends_data}
-    """
+You are the Chief Content Strategist for WeiseWealth / WeiseCompass, a premium wealth management startup specializing in Shariah-compliant and ethical investing. Your writing is known for being intellectually rigorous, data-rich, metaphor-driven, and brutally honest about limitations.
+
+Today's date is {today}.
+
+Based on the following recent news data, write a long-form LinkedIn article (1000-1400 words) that EXACTLY follows the structure and style of the template below.
+
+=== TEMPLATE STRUCTURE (FOLLOW THIS EXACTLY) ===
+
+LinkedIn Post (Ready to Publish)
+
+#WeiseCompass: {year} Trends — [METAPHORICAL TITLE]: [DESCRIPTIVE SUBTITLE]
+
+[One-line hook summarizing the core insight]
+
+[CULTURAL/LITERARY OPENING: 1-2 sentences using a powerful metaphor from literature, history, or nature — like Frank Herbert's Dune, Sun Tzu, Ibn Khaldun, or a historical trade route. This metaphor must connect to the financial theme.]
+
+Why: The [Problem/Exposure Name]
+[2-3 paragraphs explaining the core problem. MUST include specific data points and cite sources inline like "according to X" or "X reported that...". Be precise with numbers.]
+
+How: [The Solutions] and Their Limits
+[2-3 paragraphs explaining the market's response/solutions. MUST include:
+- Specific data points with sources
+- A critical subsection explaining 3+ LIMITS or hidden risks of these solutions
+- Be intellectually honest — do not oversell]
+
+The Power of [Theme]: The Sectors Capturing the Shift
+[Intro paragraph explaining where institutional capital is flowing]
+Then use this exact sub-structure with 3-4 bullet points:
+• [Sector 1]: [Specific description of what's happening]
+• [Sector 2]: [Specific description]
+• [Sector 3]: [Specific description]
+
+The Insight: [One sentence acknowledging these sectors face their own risks — permitting, financing, political risk, etc.]
+
+To What Extent: The Limits of the Thesis & Shariah Screening Nuances
+[This is the MOST IMPORTANT section. It must contain TWO parts:]
+
+Part 1 — Honest Limits: 1-2 paragraphs explaining why the thesis is NOT a one-way bet. What could go wrong? What is being overpriced?
+
+Part 2 — Shariah Screening Nuances: 2-3 bullet points with DEEP technical Shariah analysis. You MUST reference specific concepts like:
+- AAOIFI standards and specific thresholds (e.g., 33% debt-to-market-cap)
+- Specific Islamic finance instruments (ijara, murabaha, musharaka, sukuk structures)
+- Technical traps (e.g., how market-cap fluctuations can cause a previously-compliant company to fail screening)
+- The difference between real-asset backing vs. "ghost stocks"
+- The need for case-by-case scholarly review
+
+Do NOT be generic here. This section must demonstrate real Shariah compliance expertise.
+
+WeiseWealth Wisdom for Wealth Managers
+[1-2 sentences of closing wisdom, ideally tying back to the opening metaphor. Make it memorable and quotable.]
+
+Disclaimer: This is analysis, not investment advice. Anyone acting on it should consult a qualified adviser and review the screening methodology for the specific fund or company.
+
+[ENGAGEMENT QUESTION: One specific, thought-provoking question that invites comments. Example: "Which indicator would you watch first to judge whether these routes are working: tanker transits, pipeline utilization, or insurance rates?"]
+
+#WeiseCompass #[8-12 highly relevant hashtags, mixing broad (#WealthManagement #ShariahCompliant) and specific (#GreenSukuk #AAOIFI #InfrastructureInvesting)]
+
+=== STRICT STYLE RULES ===
+1. Use the news data as your source material. Cite sources inline (Bloomberg, Reuters, EIA, IMF, etc.) even if you have to paraphrase.
+2. Be intellectually honest. Every bull case must have a bear case. Never oversell.
+3. The Shariah section must be TECHNICAL, not generic. Reference AAOIFI, specific ratios, specific instruments.
+4. The metaphor must appear in the opening AND be referenced again in the closing wisdom.
+5. Use clean paragraphs. No emojis. Professional, authoritative tone — like a senior strategist writing for institutional clients.
+6. Total length: 1000-1400 words.
+
+=== NEWS DATA ===
+{trends_data}
+"""
     response = client.chat.completions.create(
-        model="openai/gpt-oss-120b", # Powerful, free, and excellent at professional writing
+        model="qwen-2.5-32b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7
     )
@@ -68,8 +126,8 @@ def send_email(subject, body):
     msg['From'] = sender_email
     msg['To'] = receiver_email
     
-    header = f"Hi there,\n\nYour weekly Shariah-compliant wealth article is ready! Just copy the text below and paste it directly into LinkedIn.\n\n{'='*50}\n\n"
-    footer = f"\n\n{'='*50}\n\nDon't forget to add 3-5 relevant hashtags (e.g., #IslamicFinance #ESG #WealthManagement) and tag relevant partners before posting!"
+    header = f"Hi there,\n\nYour weekly WeiseCompass article is ready for LinkedIn. Just copy the text below and paste it directly.\n\n{'='*60}\n\n"
+    footer = f"\n\n{'='*60}\n\nReminder before posting:\n• Review the Shariah technical section for accuracy\n• Consider tagging relevant partners or scholars\n• Engage with early comments within the first hour for algorithm boost\n"
     
     msg.set_content(header + body + footer)
 
@@ -89,7 +147,7 @@ if __name__ == "__main__":
         print("No news found. Exiting.")
         exit()
         
-    print("✍️ Writing article...")
+    print("✍️ Writing WeiseCompass article...")
     article = generate_article(news_data)
     
     os.makedirs("articles", exist_ok=True)
@@ -99,5 +157,5 @@ if __name__ == "__main__":
         f.write(article)
     print(f"✅ Article saved to {filename}")
 
-    email_subject = f"🚀 Ready for LinkedIn: Weekly Ethical Wealth Trends - {today_str}"
+    email_subject = f"🚀 Ready for LinkedIn: WeiseCompass Weekly - {today_str}"
     send_email(email_subject, article)
