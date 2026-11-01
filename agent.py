@@ -17,8 +17,7 @@ def search_news():
         "Shariah compliant wealth management ethical trends",
         "Islamic finance ESG investment news",
         "green sukuk ethical investing wealth management",
-        "Islamic finance infrastructure real assets trends",
-        "halal investing market outlook 2026"
+        "Islamic finance infrastructure real assets trends"
     ]
     all_news = []
     with DDGS() as ddgs:
@@ -34,75 +33,30 @@ def search_news():
 
 def generate_article(trends_data):
     today = datetime.now().strftime('%B %d, %Y')
-    year = datetime.now().strftime('%Y')
     
     prompt = f"""
-You are the Chief Content Strategist for WeiseWealth / WeiseCompass, a premium wealth management startup specializing in Shariah-compliant and ethical investing. Your writing is known for being intellectually rigorous, data-rich, metaphor-driven, and brutally honest about limitations.
+Write a LinkedIn article of about 900 to 1,000 words on the topic derived from the source material below. 
 
-Today's date is {today}.
+Voice: Write in the voice of an economic analyst: measured, analytical, and informative. It is commentary, not investment advice.
 
-Based on the following recent news data, write a long-form LinkedIn article (1000-1400 words) that EXACTLY follows the structure and style of the template below.
+Framing Device: Frame the article with a film chosen for its fit with the topic. Choose a film whose central dilemma matches the topic, and explain why you chose it in one sentence. Open and close with a brief reference to it, and use one or two further references in the body where they clarify a specific point. The film should illustrate the analysis, not replace it. Do not retell the plot, do not quote dialogue beyond a short phrase, and do not mention film stills or copyrighted artwork.
 
-=== TEMPLATE STRUCTURE (FOLLOW THIS EXACTLY) ===
+Organize the article around three questions, with a bold heading for each:
 
-LinkedIn Post (Ready to Publish)
+**Why:** What is the exposure, and why does it matter now?
+**How:** What responses exist, and what are their concrete capacities and limits?
+**To what extent:** How far do these responses reduce the risk, and what are the timelines, costs, and open uncertainties?
 
-#WeiseCompass: {year} Trends — [METAPHORICAL TITLE]: [DESCRIPTIVE SUBTITLE]
+STRICT RULES:
+1. Ground every figure in a named source, and say when a figure is an estimate.
+2. Where sources disagree or reporting is unclear, say so.
+3. Do not name specific stocks, recommend positions, or present any sector as a "good investment."
+4. If you discuss Islamic finance screening, describe general principles and explicitly note that compliance is judged company by company by qualified Shariah scholars.
+5. Mark anything that depends on recent developments as "as of {today}".
+6. Close with exactly one thought-provoking question for readers.
+7. Do not use emojis. Keep the formatting clean and professional.
 
-[One-line hook summarizing the core insight]
-
-[CULTURAL/LITERARY OPENING: 1-2 sentences using a powerful metaphor from literature, history, or nature — like Frank Herbert's Dune, Sun Tzu, Ibn Khaldun, or a historical trade route. This metaphor must connect to the financial theme.]
-
-Why: The [Problem/Exposure Name]
-[2-3 paragraphs explaining the core problem. MUST include specific data points and cite sources inline like "according to X" or "X reported that...". Be precise with numbers.]
-
-How: [The Solutions] and Their Limits
-[2-3 paragraphs explaining the market's response/solutions. MUST include:
-- Specific data points with sources
-- A critical subsection explaining 3+ LIMITS or hidden risks of these solutions
-- Be intellectually honest — do not oversell]
-
-The Power of [Theme]: The Sectors Capturing the Shift
-[Intro paragraph explaining where institutional capital is flowing]
-Then use this exact sub-structure with 3-4 bullet points:
-• [Sector 1]: [Specific description of what's happening]
-• [Sector 2]: [Specific description]
-• [Sector 3]: [Specific description]
-
-The Insight: [One sentence acknowledging these sectors face their own risks — permitting, financing, political risk, etc.]
-
-To What Extent: The Limits of the Thesis & Shariah Screening Nuances
-[This is the MOST IMPORTANT section. It must contain TWO parts:]
-
-Part 1 — Honest Limits: 1-2 paragraphs explaining why the thesis is NOT a one-way bet. What could go wrong? What is being overpriced?
-
-Part 2 — Shariah Screening Nuances: 2-3 bullet points with DEEP technical Shariah analysis. You MUST reference specific concepts like:
-- AAOIFI standards and specific thresholds (e.g., 33% debt-to-market-cap)
-- Specific Islamic finance instruments (ijara, murabaha, musharaka, sukuk structures)
-- Technical traps (e.g., how market-cap fluctuations can cause a previously-compliant company to fail screening)
-- The difference between real-asset backing vs. "ghost stocks"
-- The need for case-by-case scholarly review
-
-Do NOT be generic here. This section must demonstrate real Shariah compliance expertise.
-
-WeiseWealth Wisdom for Wealth Managers
-[1-2 sentences of closing wisdom, ideally tying back to the opening metaphor. Make it memorable and quotable.]
-
-Disclaimer: This is analysis, not investment advice. Anyone acting on it should consult a qualified adviser and review the screening methodology for the specific fund or company.
-
-[ENGAGEMENT QUESTION: One specific, thought-provoking question that invites comments. Example: "Which indicator would you watch first to judge whether these routes are working: tanker transits, pipeline utilization, or insurance rates?"]
-
-#WeiseCompass #[8-12 highly relevant hashtags, mixing broad (#WealthManagement #ShariahCompliant) and specific (#GreenSukuk #AAOIFI #InfrastructureInvesting)]
-
-=== STRICT STYLE RULES ===
-1. Use the news data as your source material. Cite sources inline (Bloomberg, Reuters, EIA, IMF, etc.) even if you have to paraphrase.
-2. Be intellectually honest. Every bull case must have a bear case. Never oversell.
-3. The Shariah section must be TECHNICAL, not generic. Reference AAOIFI, specific ratios, specific instruments.
-4. The metaphor must appear in the opening AND be referenced again in the closing wisdom.
-5. Use clean paragraphs. No emojis. Professional, authoritative tone — like a senior strategist writing for institutional clients.
-6. Total length: 1000-1400 words.
-
-=== NEWS DATA ===
+Source material (facts, figures, and links, with dates):
 {trends_data}
 """
     response = client.chat.completions.create(
@@ -126,8 +80,8 @@ def send_email(subject, body):
     msg['From'] = sender_email
     msg['To'] = receiver_email
     
-    header = f"Hi there,\n\nYour weekly WeiseCompass article is ready for LinkedIn. Just copy the text below and paste it directly.\n\n{'='*60}\n\n"
-    footer = f"\n\n{'='*60}\n\nReminder before posting:\n• Review the Shariah technical section for accuracy\n• Consider tagging relevant partners or scholars\n• Engage with early comments within the first hour for algorithm boost\n"
+    header = f"Hi there,\n\nYour weekly economic analysis article is ready for LinkedIn. Just copy the text below and paste it directly.\n\n{'='*60}\n\n"
+    footer = f"\n\n{'='*60}\n\nReminder before posting:\n• Verify any specific figures or dates\n• Ensure the film metaphor lands well for your audience\n• Engage with early comments within the first hour\n"
     
     msg.set_content(header + body + footer)
 
@@ -147,7 +101,7 @@ if __name__ == "__main__":
         print("No news found. Exiting.")
         exit()
         
-    print("✍️ Writing WeiseCompass article...")
+    print("✍️ Writing economic analysis article...")
     article = generate_article(news_data)
     
     os.makedirs("articles", exist_ok=True)
@@ -157,5 +111,5 @@ if __name__ == "__main__":
         f.write(article)
     print(f"✅ Article saved to {filename}")
 
-    email_subject = f"🚀 Ready for LinkedIn: WeiseCompass Weekly - {today_str}"
+    email_subject = f"🚀 Ready for LinkedIn: Weekly Economic Analysis - {today_str}"
     send_email(email_subject, article)
