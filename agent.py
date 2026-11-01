@@ -106,7 +106,7 @@ Disclaimer: This is analysis, not investment advice. Anyone acting on it should 
 {trends_data}
 """
     response = client.chat.completions.create(
-        model="qwen-2.5-32b",
+        model="openai/gpt-oss-120b",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7
     )
