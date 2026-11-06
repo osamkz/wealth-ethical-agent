@@ -13,17 +13,19 @@ if not api_key:
 client = Groq(api_key=api_key)
 
 def search_news():
+    # Broad queries to capture significant economic/energy stories
     queries = [
-        "Shariah compliant wealth management ethical trends",
-        "Islamic finance ESG investment news",
-        "green sukuk ethical investing wealth management",
-        "Islamic finance infrastructure real assets trends"
+        "global energy markets economic news",
+        "infrastructure supply chain metals commodities",
+        "geopolitical energy security trade routes",
+        "Islamic finance ESG sustainable investing",
+        "macroeconomic trends infrastructure investment"
     ]
     all_news = []
     with DDGS() as ddgs:
         for query in queries:
             try:
-                results = list(ddgs.news(query, max_results=4))
+                results = list(ddgs.news(query, max_results=5))
                 for r in results:
                     all_news.append(f"- {r['title']} ({r['date']}): {r['body']}")
                 time.sleep(2) 
@@ -31,15 +33,31 @@ def search_news():
                 print(f"Search error for {query}: {e}")
     return "\n".join(all_news)
 
-def generate_article(trends_data):
+def generate_editorial_workflow(trends_data):
     today = datetime.now().strftime('%B %d, %Y')
     
     prompt = f"""
-Write a LinkedIn article of about 900 to 1,000 words on the topic derived from the source material below. 
+You are a senior economic analyst and editorial strategist. Today's date is {today}.
 
-Voice: Write in the voice of an economic analyst: measured, analytical, and informative. It is commentary, not investment advice.
+=== STEP 1: CHOOSE THE TOPIC ===
+Search for the most significant economic or energy stories from the past two weeks, focusing on energy, infrastructure, supply chains, metals, and geopolitical trade routes.
 
-Framing Device: Frame the article with a film chosen for its fit with the topic. Choose a film whose central dilemma matches the topic, and explain why you chose it in one sentence. Open and close with a brief reference to it, and use one or two further references in the body where they clarify a specific point. The film should illustrate the analysis, not replace it. Do not retell the plot, do not quote dialogue beyond a short phrase, and do not mention film stills or copyrighted artwork.
+Propose three candidate topics. For each, provide:
+- Topic name
+- One line on why it matters now
+- Main sources covering it (from the news data below)
+
+Then pick the strongest one and explain your choice in two sentences.
+
+=== STEP 2: CHOOSE THE FILM ===
+Select a film whose central dilemma matches the chosen topic's structure (e.g., single point of failure, scarce resource, contested route, struggle over power and supply). Do not choose a film just because it shares a setting or genre.
+
+Explain the match in one sentence.
+
+=== STEP 3: WRITE THE ARTICLE ===
+Write about 900 to 1,000 words in the voice of an economic analyst: measured, analytical, and informative. It is commentary, not investment advice.
+
+Open and close with a brief reference to the film. Use one or two further references in the body where they clarify a specific point. The film should illustrate the analysis, not replace it. Do not retell the plot, do not quote dialogue beyond a short phrase, and do not use film stills or copyrighted artwork.
 
 Organize the article around three questions, with a bold heading for each:
 
@@ -48,15 +66,39 @@ Organize the article around three questions, with a bold heading for each:
 **To what extent:** How far do these responses reduce the risk, and what are the timelines, costs, and open uncertainties?
 
 STRICT RULES:
-1. Ground every figure in a named source, and say when a figure is an estimate.
-2. Where sources disagree or reporting is unclear, say so.
-3. Do not name specific stocks, recommend positions, or present any sector as a "good investment."
-4. If you discuss Islamic finance screening, describe general principles and explicitly note that compliance is judged company by company by qualified Shariah scholars.
-5. Mark anything that depends on recent developments as "as of {today}".
-6. Close with exactly one thought-provoking question for readers.
-7. Do not use emojis. Keep the formatting clean and professional.
+- Ground every figure in a named source with its date, and say when a figure is an estimate.
+- Where sources disagree or reporting is unclear, say so.
+- Do not name specific stocks, recommend positions, or present any sector as a good investment.
+- If you discuss Islamic finance screening, describe general principles and note that compliance is judged company by company by qualified Shariah scholars.
+- Mark anything that depends on recent developments as "as of {today}."
+- Close with one question for readers.
 
-Source material (facts, figures, and links, with dates):
+=== STEP 4: FACT-CHECK LIST ===
+Create a list of every figure and film reference with its source or basis for checking.
+
+=== OUTPUT FORMAT ===
+Output the following in this exact order:
+
+## CANDIDATE TOPICS
+[Topic 1 with sources and why it matters]
+[Topic 2 with sources and why it matters]
+[Topic 3 with sources and why it matters]
+
+## CHOSEN TOPIC
+[Topic name]
+[Two-sentence justification]
+
+## CHOSEN FILM
+[Film title]
+[One-sentence explanation of the match]
+
+## ARTICLE
+[The full 900-1,000 word article]
+
+## FACT-CHECK LIST
+[Every figure and film reference with source]
+
+=== SOURCE MATERIAL ===
 {trends_data}
 """
     response = client.chat.completions.create(
@@ -80,8 +122,8 @@ def send_email(subject, body):
     msg['From'] = sender_email
     msg['To'] = receiver_email
     
-    header = f"Hi there,\n\nYour weekly economic analysis article is ready for LinkedIn. Just copy the text below and paste it directly.\n\n{'='*60}\n\n"
-    footer = f"\n\n{'='*60}\n\nReminder before posting:\n• Verify any specific figures or dates\n• Ensure the film metaphor lands well for your audience\n• Engage with early comments within the first hour\n"
+    header = f"Hi there,\n\nYour weekly editorial workflow is complete. Below you'll find:\n• 3 candidate topics with sources\n• The chosen topic and film\n• The full article (ready for LinkedIn)\n• A fact-check list for verification\n\n{'='*60}\n\n"
+    footer = f"\n\n{'='*60}\n\nReminder before posting:\n• Copy only the ARTICLE section for LinkedIn\n• Verify key figures using the fact-check list\n• Engage with early comments within the first hour\n"
     
     msg.set_content(header + body + footer)
 
@@ -94,22 +136,22 @@ def send_email(subject, body):
         print(f"❌ Failed to send email: {e}")
 
 if __name__ == "__main__":
-    print("🔍 Screening news...")
+    print("🔍 Screening news for significant economic/energy stories...")
     news_data = search_news()
     
     if not news_data:
         print("No news found. Exiting.")
         exit()
         
-    print("✍️ Writing economic analysis article...")
-    article = generate_article(news_data)
+    print("✍️ Running editorial workflow (topic selection, film matching, article writing)...")
+    editorial_output = generate_editorial_workflow(news_data)
     
     os.makedirs("articles", exist_ok=True)
     today_str = datetime.now().strftime('%Y-%m-%d')
     filename = f"articles/article_{today_str}.md"
     with open(filename, "w", encoding="utf-8") as f:
-        f.write(article)
-    print(f"✅ Article saved to {filename}")
+        f.write(editorial_output)
+    print(f"✅ Editorial workflow saved to {filename}")
 
-    email_subject = f"🚀 Ready for LinkedIn: Weekly Economic Analysis - {today_str}"
-    send_email(email_subject, article)
+    email_subject = f"🚀 Weekly Editorial Ready - {today_str}"
+    send_email(email_subject, editorial_output)
