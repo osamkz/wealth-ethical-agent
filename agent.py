@@ -65,16 +65,29 @@ Organize the article around three questions, with a bold heading for each:
 **How:** What responses exist, and what are their concrete capacities and limits?
 **To what extent:** How far do these responses reduce the risk, and what are the timelines, costs, and open uncertainties?
 
+**The Sectors Capturing the Shift:**
+Identify three asset-backed sectors or industries that will structurally benefit from the situation described in the news. For each sector:
+- Name the sector/industry (e.g., "Pipeline Engineering & Grid Construction," "Specialized Metallurgy & Steel Tubing," "Intermodal Logistics & Storage Terminals")
+- Explain in 2-3 sentences how this sector benefits from the structural shift
+- Name 2-3 representative companies or listed stocks within that sector as concrete examples (with ticker symbols where relevant) to illustrate the type of business exposed to this trend
+- Focus on real-economy, asset-backed businesses (physical infrastructure, commodities, industrial production) rather than speculative or purely financial plays
+- Note any risks or limitations these sectors face (permitting, financing, political risk, etc.)
+
+**Shariah Screening Note for the Sectors:**
+For each of the three sectors identified above, add a brief note (2-3 sentences) addressing Shariah compliance considerations:
+- Whether the sector is generally permissible in principle (e.g., asset-backed industrial businesses are typically favored over purely speculative or interest-based businesses)
+- Common screening issues investors should watch (e.g., interest-bearing debt ratios under AAOIFI's 33% threshold, impermissible revenue streams, the market-cap denominator trap where a compliant company can fail screening during a market downturn without taking on new debt)
+- A clear reminder that permissibility is judged company by company by qualified Shariah scholars, and that structures like ijara, murabaha, or sukuk must be reviewed case by case
+
 STRICT RULES:
 - Ground every figure in a named source with its date, and say when a figure is an estimate.
 - Where sources disagree or reporting is unclear, say so.
-- Do not name specific stocks, recommend positions, or present any sector as a good investment.
-- If you discuss Islamic finance screening, describe general principles and note that compliance is judged company by company by qualified Shariah scholars.
+- If you name a company, frame it as an illustrative example of the sector, not as a recommendation or position.
 - Mark anything that depends on recent developments as "as of {today}."
 - Close with one question for readers.
 
 === STEP 4: FACT-CHECK LIST ===
-Create a list of every figure and film reference with its source or basis for checking.
+Create a list of every figure, company name, and film reference with its source or basis for checking.
 
 === OUTPUT FORMAT ===
 Output the following in this exact order:
@@ -93,10 +106,10 @@ Output the following in this exact order:
 [One-sentence explanation of the match]
 
 ## ARTICLE
-[The full 900-1,000 word article]
+[The full 900-1,000 word article with the five sections: Why, How, To what extent, The Sectors Capturing the Shift, Shariah Screening Note]
 
 ## FACT-CHECK LIST
-[Every figure and film reference with source]
+[Every figure, company name, and film reference with source]
 
 === SOURCE MATERIAL ===
 {trends_data}
@@ -122,8 +135,8 @@ def send_email(subject, body):
     msg['From'] = sender_email
     msg['To'] = receiver_email
     
-    header = f"Hi there,\n\nYour weekly editorial workflow is complete. Below you'll find:\n• 3 candidate topics with sources\n• The chosen topic and film\n• The full article (ready for LinkedIn)\n• A fact-check list for verification\n\n{'='*60}\n\n"
-    footer = f"\n\n{'='*60}\n\nReminder before posting:\n• Copy only the ARTICLE section for LinkedIn\n• Verify key figures using the fact-check list\n• Engage with early comments within the first hour\n"
+    header = f"Hi there,\n\nYour weekly editorial workflow is complete. Below you'll find:\n• 3 candidate topics with sources\n• The chosen topic and film\n• The full article (ready for LinkedIn) including sector analysis and Shariah screening notes\n• A fact-check list for verification\n\n{'='*60}\n\n"
+    footer = f"\n\n{'='*60}\n\nReminder before posting:\n• Copy only the ARTICLE section for LinkedIn\n• Verify key figures and company names using the fact-check list\n• Review the Shariah screening notes with a qualified scholar if publishing under your brand\n• Engage with early comments within the first hour\n"
     
     msg.set_content(header + body + footer)
 
@@ -143,7 +156,7 @@ if __name__ == "__main__":
         print("No news found. Exiting.")
         exit()
         
-    print("✍️ Running editorial workflow (topic selection, film matching, article writing)...")
+    print("✍️ Running editorial workflow (topic selection, film matching, article writing, sector analysis, Shariah notes)...")
     editorial_output = generate_editorial_workflow(news_data)
     
     os.makedirs("articles", exist_ok=True)
